@@ -77,7 +77,23 @@ class TestMain(unittest.TestCase):
 		pass
 
 	def test_duplicate_train(self):
-		pass
+		path = "json-metamorphique/train_words.json"
+		with open("train_set.json") as file:
+			dataset = json.load(file)
+			for row in dataset["dataset"]:
+				row["mail"]["Body"] += row["mail"]["Body"]
+			out_file = open(path, "w")
+			json.dump(dataset, out_file, indent=6)
+			out_file.close()
+		self.f1_comparison(path)
 
 	def test_duplicate_test(self):
-		pass
+		path = "json-metamorphique/test_words.json"
+		with open("test_set.json") as file:
+			dataset = json.load(file)
+			for row in dataset["dataset"]:
+				row["mail"]["Body"] += row["mail"]["Body"]
+			out_file = open(path, "w")
+			json.dump(dataset, out_file, indent=6)
+			out_file.close()
+		self.f1_comparison(path)

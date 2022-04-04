@@ -71,10 +71,36 @@ class TestMain(unittest.TestCase):
 		self.f1_comparison(path)
 
 	def test_triple_train(self):
-		pass
+		path = "json-metamorphique/train700x3.json"
+		with open("train_set.json") as file:
+			dataset = json.load(file)
+			new_dataset = {}
+			new_dataset["dataset"] = []
+
+			for row in dataset["dataset"]:
+				new_dataset["dataset"].append(row)
+				new_dataset["dataset"].append(row)
+				new_dataset["dataset"].append(row)
+			out_file = open(path, "w")
+			json.dump(new_dataset, out_file, indent=6)
+			out_file.close()
+		self.f1_comparison(path)
 
 	def test_triple_test(self):
-		pass
+		path = "json-metamorphique/train300x3.json"
+		with open("test_set.json") as file:
+			dataset = json.load(file)
+			new_dataset = {}
+			new_dataset["dataset"] = []
+
+			for row in dataset["dataset"]:
+				new_dataset["dataset"].append(row)
+				new_dataset["dataset"].append(row)
+				new_dataset["dataset"].append(row)
+			out_file = open(path, "w")
+			json.dump(new_dataset, out_file, indent=6)
+			out_file.close()
+		self.f1_comparison(path)
 
 	def test_duplicate_train(self):
 		path = "json-metamorphique/train_words.json"

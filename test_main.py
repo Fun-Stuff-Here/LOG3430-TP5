@@ -1,5 +1,5 @@
 import json
-from random import random
+import random
 
 from main import evaluate
 from main import DEFAULT_TRAINING_SET
@@ -41,15 +41,34 @@ class TestMain(unittest.TestCase):
 		self.f1_comparison(path)
 
 	def test_permutation_train(self):
-		with json.load("train_set.json") as file:
-			dataset = file["dataset"]
-			for row in dataset:
-				tokens = row["body"].split()
-				for _ in range(10):
-					random.randint(0, len(tokens))
+		path = "json-metamorphique/train_shuffle.json"
+		with open("train_set.json") as file:
+			dataset = json.load(file)
+			for row in dataset["dataset"]:
+				tokens = self.cleaner.clean_text(row["mail"]["Body"])
+				if len(tokens) < 3: continue
+				index1, index2 = random.randint(0, len(tokens) - 1), random.randint(0, len(tokens) - 1)
+				tokens[index1], tokens[index2] = tokens[index2], tokens[index1]
+				row["mail"]["Body"] = " ".join(tokens)
+			out_file = open(path, "w")
+			json.dump(dataset, out_file, indent=6)
+			out_file.close()
+		self.f1_comparison(path)
 
 	def test_permutation_test(self):
-		pass
+		path = "json-metamorphique/test_shuffle.json"
+		with open("test_set.json") as file:
+			dataset = json.load(file)
+			for row in dataset["dataset"]:
+				tokens = self.cleaner.clean_text(row["mail"]["Body"])
+				if len(tokens) < 3: continue
+				index1, index2 = random.randint(0, len(tokens)-1), random.randint(0, len(tokens)-1)
+				tokens[index1], tokens[index2] = tokens[index2], tokens[index1]
+				row["mail"]["Body"] = " ".join(tokens)
+			out_file = open(path, "w")
+			json.dump(dataset, out_file, indent=6)
+			out_file.close()
+		self.f1_comparison(path)
 
 	def test_triple_train(self):
 		pass

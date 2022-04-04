@@ -3,15 +3,16 @@ from vocabulary_creator import VocabularyCreator
 from renege import RENEGE
 from email_analyzer import EmailAnalyzer
 
+DEFAULT_TRAINING_SET= "test_set.json"
 
-def evaluate():
+def evaluate(test_set_json_path: str):
     tp = 0
     tn = 0
     fp = 0
     fn = 0
     total = 0
     analyzer = EmailAnalyzer()
-    with open("test_set.json") as email_file:
+    with open(test_set_json_path) as email_file:
         new_emails = json.load(email_file)
 
     i = 0
@@ -27,11 +28,11 @@ def evaluate():
         body = new_email["Body"]
         spam = new_email["Spam"]
 
-        if ((analyzer.is_spam(subject, body))) and (spam == "true"):
+        if (analyzer.is_spam(subject, body)) and (spam == "true"):
             tp += 1
         if (not (analyzer.is_spam(subject, body))) and (spam == "false"):
             tn += 1
-        if ((analyzer.is_spam(subject, body))) and (spam == "false"):
+        if (analyzer.is_spam(subject, body)) and (spam == "false"):
             fp += 1
         if (not (analyzer.is_spam(subject, body))) and (spam == "true"):
             fn += 1
@@ -39,9 +40,13 @@ def evaluate():
     
     print("")
     print("\nAccuracy: ", round((tp + tn) / (tp + tn + fp + fn), 2))
-    print("Precision: ", round(tp / (tp + fp), 2))
-    print("Recall: ", round(tp / (tp + fn), 2))
-    return True
+    precision = tp / (tp + fp)
+    print("Precision: ", round(precision, 2))
+    recall = tp / (tp + fn)
+    print("Recall: ", round(recall, 2))
+    f1 = 2*(precision * recall)/(precision+recall)
+    print(f"F1-score {f1}")
+    return f1
 
 
 if __name__ == "__main__":
@@ -55,4 +60,4 @@ if __name__ == "__main__":
     renege.classify_emails()
 
     #3. Evaluation de performance du modele avec la fonction evaluate()
-    evaluate()
+    f1 = evaluate(test_set_json_path=DEFAULT_TRAINING_SET)

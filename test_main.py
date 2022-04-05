@@ -87,7 +87,7 @@ class TestMain(unittest.TestCase):
 		self.f1_comparison(path)
 
 	def test_triple_test(self):
-		path = "json-metamorphique/train300x3.json"
+		path = "json-metamorphique/test300x3.json"
 		with open("test_set.json") as file:
 			dataset = json.load(file)
 			new_dataset = {}
